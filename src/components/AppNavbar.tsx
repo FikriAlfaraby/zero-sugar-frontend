@@ -5,7 +5,7 @@ import { SidebarTrigger } from './ui/sidebar';
 
 const AppNavbar = () => {
   const t = useTranslations('DashboardLayout');
-  
+
   return (
     <div className="my-2 flex h-fit flex-1 items-center justify-between border bg-sidebar p-2">
       <SidebarTrigger />

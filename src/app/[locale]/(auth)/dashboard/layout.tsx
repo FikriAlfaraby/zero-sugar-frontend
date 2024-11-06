@@ -13,3 +13,5 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+export const dynamic = 'force-dynamic';
