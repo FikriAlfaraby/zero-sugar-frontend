@@ -1,0 +1,42 @@
+{"level":"INFO","message":"[8:33:18.788 PM]: Connecting to GLOBAL Snowflake domain"}
+{"level":"INFO","message":"[8:33:18.806 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[8:33:18.818 PM]: No client config detected."}
+{"level":"INFO","message":"[8:33:18.819 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[8:33:18.820 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"WARN","message":"[8:33:23.024 PM]: WARNING!!! using fail-open to connect. Driver is connecting to an HTTPS endpoint without OCSP based Certificated Revocation checking as it could not obtain a valid OCSP Response to use from the CA OCSP responder. Details: TypeError: Cannot read properties of undefined (reading '0')"}
+{"level":"INFO","message":"[8:34:16.824 PM]: Connecting to GLOBAL Snowflake domain"}
+{"level":"INFO","message":"[8:34:16.834 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[8:34:16.838 PM]: No client config detected."}
+{"level":"INFO","message":"[8:34:16.838 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[8:34:16.839 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"WARN","message":"[8:34:17.642 PM]: WARNING!!! using fail-open to connect. Driver is connecting to an HTTPS endpoint without OCSP based Certificated Revocation checking as it could not obtain a valid OCSP Response to use from the CA OCSP responder. Details: TypeError: Cannot read properties of undefined (reading '0')"}
+{"level":"WARN","message":"[8:35:01.468 PM]: WARNING!!! using fail-open to connect. Driver is connecting to an HTTPS endpoint without OCSP based Certificated Revocation checking as it could not obtain a valid OCSP Response to use from the CA OCSP responder. Details: TypeError: Cannot read properties of undefined (reading '0')"}
+{"level":"INFO","message":"[8:36:36.145 PM]: Connecting to GLOBAL Snowflake domain"}
+{"level":"INFO","message":"[8:36:36.155 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[8:36:36.161 PM]: No client config detected."}
+{"level":"INFO","message":"[8:36:36.162 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[8:36:36.164 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"WARN","message":"[8:36:37.524 PM]: WARNING!!! using fail-open to connect. Driver is connecting to an HTTPS endpoint without OCSP based Certificated Revocation checking as it could not obtain a valid OCSP Response to use from the CA OCSP responder. Details: TypeError: Cannot read properties of undefined (reading '0')"}
+{"level":"INFO","message":"[8:39:15.024 PM]: Connecting to GLOBAL Snowflake domain"}
+{"level":"INFO","message":"[8:39:15.034 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[8:39:15.037 PM]: No client config detected."}
+{"level":"INFO","message":"[8:39:15.038 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[8:39:15.038 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"WARN","message":"[8:39:19.045 PM]: WARNING!!! using fail-open to connect. Driver is connecting to an HTTPS endpoint without OCSP based Certificated Revocation checking as it could not obtain a valid OCSP Response to use from the CA OCSP responder. Details: TypeError: Cannot read properties of undefined (reading '0')"}
+{"level":"INFO","message":"[8:48:38.327 PM]: Connecting to GLOBAL Snowflake domain"}
+{"level":"INFO","message":"[8:48:38.338 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[8:48:38.400 PM]: No client config detected."}
+{"level":"INFO","message":"[8:48:38.402 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[8:48:38.403 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[8:48:39.565 PM]: Connecting to GLOBAL Snowflake domain"}
+{"level":"INFO","message":"[8:48:39.576 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[8:48:39.586 PM]: No client config detected."}
+{"level":"INFO","message":"[8:48:39.586 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[8:48:39.587 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"WARN","message":"[8:48:40.982 PM]: WARNING!!! using fail-open to connect. Driver is connecting to an HTTPS endpoint without OCSP based Certificated Revocation checking as it could not obtain a valid OCSP Response to use from the CA OCSP responder. Details: TypeError: Cannot read properties of undefined (reading '0')"}
+{"level":"INFO","message":"[8:54:13.629 PM]: Connecting to GLOBAL Snowflake domain"}
+{"level":"INFO","message":"[8:54:13.638 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[8:54:13.642 PM]: No client config detected."}
+{"level":"INFO","message":"[8:54:13.643 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[8:54:13.643 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"WARN","message":"[8:54:15.462 PM]: WARNING!!! using fail-open to connect. Driver is connecting to an HTTPS endpoint without OCSP based Certificated Revocation checking as it could not obtain a valid OCSP Response to use from the CA OCSP responder. Details: TypeError: Cannot read properties of undefined (reading '0')"}

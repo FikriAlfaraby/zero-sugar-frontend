@@ -1,0 +1,88 @@
+{
+  "RootLayout": {
+    "home_link": "Beranda",
+    "about_link": "Tentang",
+    "counter_link": "Penghitung",
+    "portfolio_link": "Portofolio",
+    "sign_in_link": "Masuk",
+    "sign_up_link": "Daftar"
+  },
+  "BaseTemplate": {
+    "description": "Kode awal untuk Next.js dengan Tailwind CSS"
+  },
+  "Index": {
+    "meta_title": "Zero Sugar App",
+    "meta_description": "Zero Sugar adalah aplikasi kesehatan interaktif yang membantu remaja dan orang tua memantau konsumsi gula, garam, dan lemak harian. Dengan fitur dashboard analitik, panduan gaya hidup sehat, dan pemindai label gula, Zero Sugar mendukung kebiasaan makan yang lebih sehat dan menyenangkan.",
+    "sponsors_title": "Sponsor"
+  },
+  "Counter": {
+    "meta_title": "Penghitung",
+    "meta_description": "Contoh operasi DB",
+    "loading_counter": "Memuat penghitung...",
+    "error_reporting_powered_by": "Pelaporan kesalahan didukung oleh"
+  },
+  "CounterForm": {
+    "presentation": "Penghitung ini disimpan di database dan ditambah sesuai nilai yang Anda berikan.",
+    "label_increment": "Tambahkan sebanyak",
+    "button_increment": "Tambah"
+  },
+  "CurrentCount": {
+    "count": "Jumlah: {count}"
+  },
+  "About": {
+    "meta_title": "Tentang",
+    "meta_description": "Deskripsi Tentang",
+    "about_paragraph": "Selamat datang di halaman Tentang kami! Kami adalah tim yang berdedikasi dan bersemangat dalam menciptakan perangkat lunak.",
+    "translation_powered_by": "Terjemahan didukung oleh"
+  },
+  "Portfolio": {
+    "meta_title": "Portofolio",
+    "meta_description": "Selamat datang di halaman portofolio saya!",
+    "presentation": "Selamat datang di halaman portofolio saya! Di sini Anda akan menemukan kumpulan karya dan pencapaian saya. Melalui portofolio ini, saya menunjukkan keahlian, kreativitas, dan nilai yang dapat saya berikan kepada proyek Anda.",
+    "portfolio_name": "Portofolio {name}",
+    "error_reporting_powered_by": "Pelaporan kesalahan didukung oleh",
+    "coverage_powered_by": "Cakupan kode didukung oleh"
+  },
+  "PortfolioSlug": {
+    "meta_title": "Portofolio {slug}",
+    "meta_description": "Deskripsi Portofolio {slug}",
+    "header": "Portofolio {slug}",
+    "content": "Membuat serangkaian materi promosi dan elemen branding untuk acara perusahaan. Merancang tema visual yang terintegrasi, meliputi logo, poster, spanduk, dan aset digital. Menggabungkan identitas merek klien dengan pendekatan kontemporer dan inovatif. Mendapatkan tanggapan positif dari peserta, yang menghasilkan acara yang sukses dengan keterlibatan peserta yang lebih tinggi dan visibilitas merek yang lebih baik.",
+    "log_management_powered_by": "Manajemen log didukung oleh"
+  },
+  "SignIn": {
+    "meta_title": "Masuk",
+    "meta_description": "Masuk ke akun Anda dengan mudah."
+  },
+  "SignUp": {
+    "meta_title": "Daftar",
+    "meta_description": "Buat akun dengan mudah melalui proses pendaftaran yang intuitif."
+  },
+  "Dashboard": {
+    "meta_title": "Dasbor",
+    "hello_message": "Halo {email}!"
+  },
+  "UserProfile": {
+    "meta_title": "Profil Pengguna"
+  },
+  "DashboardLayout": {
+    "dashboard_link": "Dasbor",
+    "user_profile_link": "Kelola akun Anda",
+    "sign_out": "Keluar"
+  },
+  "LandingPage": {
+    "title": "Zero Sugar",
+    "description": "Aplikasi web interaktif untuk memantau konsumsi gula harian dan mendukung gaya hidup yang lebih sehat.",
+    "getStarted": "Mulai Sekarang",
+    "signIn": "Masuk",
+    "signUp": "Daftar",
+    "features": {
+      "trackIntake": "Pantau Konsumsi Gula Anda",
+      "personalJourney": "Perjalanan Kesehatan yang Dipersonalisasi",
+      "ocrScanner": "Pemindai Gula OCR",
+      "ctaTitle": "Mulai Perjalanan Sehat Anda Hari Ini",
+      "ctaDescription": "Bergabunglah dengan Zero Sugar untuk membangun kebiasaan makan yang lebih sehat dan seimbang. Daftar sekarang dan ubah pola makan Anda!"
+    },
+    "footer": "© 2024 Zero Sugar Web App. Hak cipta dilindungi."
+  }
+}
