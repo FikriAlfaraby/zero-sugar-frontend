@@ -9,6 +9,7 @@ import { unstable_setRequestLocale } from 'next-intl/server';
 import NextTopLoader from 'nextjs-toploader';
 import { PrimeReactProvider } from 'primereact/api';
 
+import { Toaster } from '@/components/ui/toaster';
 import { AppConfig } from '@/utils/AppConfig';
 
 export const metadata: Metadata = {
@@ -62,6 +63,7 @@ export default function RootLayout(props: {
           <PrimeReactProvider value={{ unstyled: false }}>
             <NextTopLoader />
             {props.children}
+            <Toaster />
           </PrimeReactProvider>
         </NextIntlClientProvider>
       </body>

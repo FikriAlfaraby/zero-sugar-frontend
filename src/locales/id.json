@@ -1,11 +1,17 @@
 {
   "RootLayout": {
+    "application": "Application",
     "home_link": "Beranda",
     "about_link": "Tentang",
     "counter_link": "Penghitung",
     "portfolio_link": "Portofolio",
     "sign_in_link": "Masuk",
-    "sign_up_link": "Daftar"
+    "sign_up_link": "Daftar",
+    "dashboard": "Dashboard",
+    "userJourney": "User Journey",
+    "katalogAhli": "Katalog Ahli",
+    "summary": "Summary",
+    "feedback": "Feedback"
   },
   "BaseTemplate": {
     "description": "Kode awal untuk Next.js dengan Tailwind CSS"
@@ -84,5 +90,65 @@
       "ctaDescription": "Bergabunglah dengan Zero Sugar untuk membangun kebiasaan makan yang lebih sehat dan seimbang. Daftar sekarang dan ubah pola makan Anda!"
     },
     "footer": "© 2024 Zero Sugar Web App. Hak cipta dilindungi."
+  },
+  "AnalysisInsights": {
+    "recommendation": {
+      "reduceSugar": "Pertimbangkan untuk mengurangi konsumsi gula Anda sebanyak 10% minggu ini.",
+      "increaseWater": "Cobalah untuk meningkatkan asupan air hingga 8 gelas sehari."
+    },
+    "trend": {
+      "increasedSalt": "Konsumsi garam Anda meningkat 15% dibandingkan bulan lalu.",
+      "decreasedFat": "Kerja bagus! Asupan lemak Anda berkurang 5% bulan ini."
+    }
+  },
+  "DietaryGuide": {
+    "expertTips": "Tips Ahli",
+    "healthyRecipes": "Resep Sehat",
+    "tips": {
+      "reduceSugar": "Kurangi Gula Tambahan",
+      "useNaturalSweeteners": "Pilih pemanis alami dan buah-buahan utuh daripada gula olahan.",
+      "chooseLowSodium": "Pilih Opsi Rendah Natrium",
+      "useHerbs": "Cari alternatif rendah natrium dan gunakan rempah-rempah sebagai pengganti garam.",
+      "healthyFats": "Tambahkan Lemak Sehat",
+      "unsaturatedFats": "Fokus pada lemak tak jenuh dari sumber seperti alpukat, kacang-kacangan, dan minyak zaitun."
+    },
+    "recipes": {
+      "grilledChickenSalad": "Salad Ayam Bakar",
+      "vegetableStirFry": "Tumis Sayuran",
+      "berrySmoothieBowl": "Smoothie Bowl Berry"
+    },
+    "types": {
+      "lowFat": "Rendah lemak",
+      "lowSodium": "Rendah natrium",
+      "lowSugar": "Rendah gula"
+    }
+  },
+  "HealthOverview": {
+    "nutrients": {
+      "sugar": "Gula",
+      "salt": "Garam",
+      "fat": "Lemak"
+    },
+    "withinLimits": "Dalam batas",
+    "approachingLimit": "Mendekati batas harian",
+    "dailyLimit": "Batas harian: {limit}g"
+  },
+  "dashboardTitle": "Dasbor Analitik Kesehatan",
+  "periodOptions": {
+    "today": "Hari Ini",
+    "week": "Minggu Ini",
+    "month": "Bulan Ini",
+    "year": "Tahun Ini"
+  },
+  "tabs": {
+    "overview": "Ikhtisar",
+    "analytics": "Analitik",
+    "reports": "Laporan",
+    "notifications": "Notifikasi"
+  },
+  "cardTitles": {
+    "consumptionHistory": "Riwayat Konsumsi",
+    "analysisInsights": "Analisis & Wawasan",
+    "dietaryGuide": "Panduan Diet"
   }
 }

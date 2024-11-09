@@ -1,11 +1,17 @@
 {
   "RootLayout": {
+    "application": "Application",
     "home_link": "Home",
     "about_link": "About",
     "counter_link": "Counter",
     "portfolio_link": "Portfolio",
     "sign_in_link": "Sign in",
-    "sign_up_link": "Sign up"
+    "sign_up_link": "Sign up",
+    "dashboard": "Dashboard",
+    "userJourney": "User Journey",
+    "katalogAhli": "Katalog Ahli",
+    "summary": "Summary",
+    "feedback": "Feedback"
   },
   "BaseTemplate": {
     "description": "Starter code for your Nextjs Boilerplate with Tailwind CSS",
@@ -85,5 +91,65 @@
       "ctaDescription": "Join Zero Sugar to build a balanced, healthier eating habit. Sign up now and transform your diet!"
     },
     "footer": "© 2024 Zero Sugar Web App. All rights reserved."
+  },
+  "AnalysisInsights": {
+    "recommendation": {
+      "reduceSugar": "Consider reducing your sugar intake by 10% this week.",
+      "increaseWater": "Try to increase your water intake to 8 glasses a day."
+    },
+    "trend": {
+      "increasedSalt": "Your salt consumption has increased by 15% compared to last month.",
+      "decreasedFat": "Great job! Your fat intake has decreased by 5% this month."
+    }
+  },
+  "DietaryGuide": {
+    "expertTips": "Expert Tips",
+    "healthyRecipes": "Healthy Recipes",
+    "tips": {
+      "reduceSugar": "Reduce Added Sugars",
+      "useNaturalSweeteners": "Opt for natural sweeteners and whole fruits instead of processed sugars.",
+      "chooseLowSodium": "Choose Low-Sodium Options",
+      "useHerbs": "Look for low-sodium alternatives and use herbs for flavoring instead of salt.",
+      "healthyFats": "Incorporate Healthy Fats",
+      "unsaturatedFats": "Focus on unsaturated fats from sources like avocados, nuts, and olive oil."
+    },
+    "recipes": {
+      "grilledChickenSalad": "Grilled Chicken Salad",
+      "vegetableStirFry": "Vegetable Stir-Fry",
+      "berrySmoothieBowl": "Berry Smoothie Bowl"
+    },
+    "types": {
+      "lowFat": "Low-fat",
+      "lowSodium": "Low-sodium",
+      "lowSugar": "Low-sugar"
+    }
+  },
+  "HealthOverview": {
+    "nutrients": {
+      "sugar": "Sugar",
+      "salt": "Salt",
+      "fat": "Fat"
+    },
+    "withinLimits": "Within limits",
+    "approachingLimit": "Approaching daily limit",
+    "dailyLimit": "Daily limit: {limit}g"
+  },
+  "dashboardTitle": "Health Analytics Dashboard",
+  "periodOptions": {
+    "today": "Today",
+    "week": "This Week",
+    "month": "This Month",
+    "year": "This Year"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "notifications": "Notifications"
+  },
+  "cardTitles": {
+    "consumptionHistory": "Consumption History",
+    "analysisInsights": "Analysis & Insights",
+    "dietaryGuide": "Dietary Guide"
   }
 }

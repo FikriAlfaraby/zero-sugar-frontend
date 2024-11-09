@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { Hello } from '@/components/Hello';
+import { DashboardAnalytic } from '@/components/complexes/dashboard/dashboard';
 
 export async function generateMetadata(props: { params: { locale: string } }) {
   const t = await getTranslations({
@@ -16,7 +16,7 @@ export async function generateMetadata(props: { params: { locale: string } }) {
 const Dashboard = () => {
   return (
     <div className="[&_p]:my-6">
-      <Hello />
+      <DashboardAnalytic />
     </div>
   );
 };

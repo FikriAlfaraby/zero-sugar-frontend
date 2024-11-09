@@ -1,4 +1,9 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+'use client';
+
+import { BookOpen, Home, MessageSquare, Navigation, PieChart } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 
 import {
   Sidebar,
@@ -11,53 +16,59 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-// Menu items.
 const items = [
   {
-    title: 'Dashboard',
+    id: 'dashboard',
     url: '/dashboard',
     icon: Home,
   },
   {
-    title: 'Inbox',
-    url: '#',
-    icon: Inbox,
+    id: 'userJourney',
+    url: '/dashboard/user-journey',
+    icon: Navigation,
   },
   {
-    title: 'Calendar',
-    url: '#',
-    icon: Calendar,
+    id: 'katalogAhli',
+    url: '/dashboard/katalog-ahli',
+    icon: BookOpen,
   },
   {
-    title: 'Search',
-    url: '#',
-    icon: Search,
+    id: 'summary',
+    url: '/dashboard/summary',
+    icon: PieChart,
   },
   {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
+    id: 'feedback',
+    url: '/dashboard/feedback',
+    icon: MessageSquare,
   },
 ];
 
 export function AppSidebar() {
+  const locale = useLocale();
+  const pathname = usePathname();
+  const t = useTranslations('RootLayout');
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('application')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map(item => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) => {
+                const isActive = pathname === `/${locale}${item.url}` || pathname === item.url;
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton size="default" asChild isActive={isActive}>
+                      <Link href={`/${locale}${item.url}`} className="flex items-center gap-3">
+                        <item.icon className="size-4" />
+                        <span>{t(item.id)}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

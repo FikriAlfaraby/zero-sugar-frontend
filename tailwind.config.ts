@@ -62,6 +62,15 @@ export default {
           'ring': 'hsl(var(--sidebar-ring))',
         },
       },
+      keyframes: {
+        shine: {
+          from: { backgroundPosition: '200% 0' },
+          to: { backgroundPosition: '-200% 0' },
+        },
+      },
+      animation: {
+        shine: 'shine 8s ease-in-out infinite',
+      },
     },
   },
   // eslint-disable-next-line ts/no-require-imports
