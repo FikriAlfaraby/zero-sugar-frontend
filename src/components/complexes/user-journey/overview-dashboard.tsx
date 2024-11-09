@@ -1,7 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
-export function OverviewDashboard({ completedDays, streak, healthSummary }) {
+type HealthSummary = {
+  avgSugarIntake: number;
+  avgSleepQuality: string;
+};
+
+type OverviewDashboardProps = {
+  completedDays: number;
+  streak: number;
+  healthSummary: HealthSummary;
+};
+
+export function OverviewDashboard({ completedDays, streak, healthSummary }: OverviewDashboardProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card>
@@ -40,6 +51,7 @@ export function OverviewDashboard({ completedDays, streak, healthSummary }) {
           <p>
             Avg. Sugar Intake:
             {healthSummary.avgSugarIntake.toFixed(2)}
+            {' '}
             g
           </p>
           <p>

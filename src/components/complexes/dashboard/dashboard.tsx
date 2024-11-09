@@ -19,11 +19,12 @@ import { ConsumptionHistory } from './consumption-history';
 import { DietaryGuide } from './dietary-guide';
 import { HealthOverview } from './health-overview';
 
+const periodOptions = ['today', 'week', 'month', 'year'] as const;
+type Period = typeof periodOptions[number];
+
 export function DashboardAnalytic() {
   const t = useTranslations();
-  const [selectedPeriod, setSelectedPeriod] = useState(t('periodOptions.today'));
-
-  console.log(selectedPeriod);
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>('today');
 
   return (
     <div className="flex-col md:flex">
@@ -33,16 +34,15 @@ export function DashboardAnalytic() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                {selectedPeriod}
-                {' '}
+                {t(`periodOptions.${selectedPeriod}`)}
                 <ChevronDown className="ml-2 size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {['today', 'week', 'month', 'year'].map(period => (
+              {periodOptions.map(period => (
                 <DropdownMenuItem
                   key={period}
-                  onSelect={() => setSelectedPeriod(t(`periodOptions.${period}`))}
+                  onSelect={() => setSelectedPeriod(period)}
                 >
                   {t(`periodOptions.${period}`)}
                 </DropdownMenuItem>

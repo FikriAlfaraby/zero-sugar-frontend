@@ -37,6 +37,7 @@ export default function SugarIntakeForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // eslint-disable-next-line no-console
     console.log(values);
   }
 

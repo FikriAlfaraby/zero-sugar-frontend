@@ -22,7 +22,7 @@ const formSchema = z.object({
   riskProfile: z.enum(['Low', 'Medium', 'High']),
 });
 
-export function DailyLogForm({ onSubmit }) {
+export function DailyLogForm({ onSubmit }: { onSubmit: any }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

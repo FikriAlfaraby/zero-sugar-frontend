@@ -1,5 +1,6 @@
 'use client';
 
+import type { LucideIcon } from 'lucide-react';
 import { BookOpen, Home, MessageSquare, Navigation, PieChart } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,32 +17,14 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-const items = [
-  {
-    id: 'dashboard',
-    url: '/dashboard',
-    icon: Home,
-  },
-  {
-    id: 'userJourney',
-    url: '/dashboard/user-journey',
-    icon: Navigation,
-  },
-  {
-    id: 'katalogAhli',
-    url: '/dashboard/katalog-ahli',
-    icon: BookOpen,
-  },
-  {
-    id: 'summary',
-    url: '/dashboard/summary',
-    icon: PieChart,
-  },
-  {
-    id: 'feedback',
-    url: '/dashboard/feedback',
-    icon: MessageSquare,
-  },
+type MenuItemId = 'dashboard' | 'userJourney' | 'katalogAhli' | 'summary' | 'feedback';
+
+const items: { id: MenuItemId; url: string; icon: LucideIcon }[] = [
+  { id: 'dashboard', url: '/dashboard', icon: Home },
+  { id: 'userJourney', url: '/dashboard/user-journey', icon: Navigation },
+  { id: 'katalogAhli', url: '/dashboard/katalog-ahli', icon: BookOpen },
+  { id: 'summary', url: '/dashboard/summary', icon: PieChart },
+  { id: 'feedback', url: '/dashboard/feedback', icon: MessageSquare },
 ];
 
 export function AppSidebar() {
@@ -63,7 +46,7 @@ export function AppSidebar() {
                     <SidebarMenuButton size="default" asChild isActive={isActive}>
                       <Link href={`/${locale}${item.url}`} className="flex items-center gap-3">
                         <item.icon className="size-4" />
-                        <span>{t(item.id)}</span>
+                        <span>{t(`${item.id}`)}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

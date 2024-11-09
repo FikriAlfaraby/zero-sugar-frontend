@@ -3,21 +3,17 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-export function JourneyCalendar({ completedDays }) {
-  const [hoveredDay, setHoveredDay] = useState(null);
-  console.log(completedDays);
+type JourneyCalendarProps = {
+  completedDays: number;
+};
 
-  const getDayColor = (day) => {
+export function JourneyCalendar({ completedDays }: JourneyCalendarProps) {
+  const [, setHoveredDay] = useState<number | null>(null);
+
+  const getDayColor = (day: number) => {
     if (day > completedDays) {
       return 'bg-gray-200';
     }
-    // const random = Math.random();
-    // if (random < 0.3) {
-    //   return 'bg-red-500';
-    // }
-    // if (random < 0.7) {
-    //   return 'bg-yellow-500';
-    // }
     return 'bg-green-500';
   };
 
@@ -45,12 +41,8 @@ export function JourneyCalendar({ completedDays }) {
                   </p>
                   {index < completedDays && (
                     <>
-                      <p>
-                        Sugar intake: 100 g
-                      </p>
-                      <p>
-                        Sleep: 4 hours
-                      </p>
+                      <p>Sugar intake: 100 g</p>
+                      <p>Sleep: 4 hours</p>
                     </>
                   )}
                 </TooltipContent>
