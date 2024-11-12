@@ -1,14 +1,12 @@
 import { currentUser } from '@clerk/nextjs/server';
 
-import UserJourney from '@/components/complexes/user-journey/user-journey';
+import OnboardingFlow from '@/components/complexes/user-journey/on-boarding-flow';
 
 const page = async () => {
   const user = await currentUser();
 
-  console.log(user);
-
   return (
-    <UserJourney />
+    <OnboardingFlow userId={user?.publicMetadata.id_user as number} />
   );
 };
 

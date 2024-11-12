@@ -10,6 +10,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { PrimeReactProvider } from 'primereact/api';
 
 import { Toaster } from '@/components/ui/toaster';
+import { QueryProvider } from '@/providers/queryProvider';
 import { AppConfig } from '@/utils/AppConfig';
 
 export const metadata: Metadata = {
@@ -62,7 +63,9 @@ export default function RootLayout(props: {
         >
           <PrimeReactProvider value={{ unstyled: false }}>
             <NextTopLoader />
-            {props.children}
+            <QueryProvider>
+              {props.children}
+            </QueryProvider>
             <Toaster />
           </PrimeReactProvider>
         </NextIntlClientProvider>

@@ -1,23 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-type HealthSummary = {
-  avgSugarIntake: number;
-  avgSleepQuality: string;
-};
-
 type InsightsAndMotivationProps = {
   completedDays: number;
-  healthSummary: HealthSummary;
 };
 
-export function InsightsAndMotivation({ completedDays, healthSummary }: InsightsAndMotivationProps) {
-  const getWeeklyInsight = (): string => {
-    if (healthSummary.avgSugarIntake > 50) {
-      return 'Your average sugar intake was high last week. Try reducing sugary drinks and snacks.';
-    }
-    return 'Great job maintaining a low sugar intake! Keep up the good work.';
-  };
-
+export function InsightsAndMotivation({ completedDays }: InsightsAndMotivationProps) {
   const getMilestoneMessage = (): string | null => {
     if (completedDays === 10) {
       return 'Congratulations on reaching Day 10! You\'re building great habits.';
@@ -33,14 +20,6 @@ export function InsightsAndMotivation({ completedDays, healthSummary }: Insights
 
   return (
     <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Weekly Insights</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>{getWeeklyInsight()}</p>
-        </CardContent>
-      </Card>
       {getMilestoneMessage() && (
         <Card>
           <CardHeader>
