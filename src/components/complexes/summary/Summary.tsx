@@ -9,9 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 import PieChartWithLegend from './PieChart';
 
-// Custom colors for better visualization
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-const RADIAN = Math.PI / 180;
 
 const chartConfig = {
   desktop: {
@@ -56,7 +53,7 @@ type DataProps = {
   };
 };
 
-export default function Component({ lineChartData, pieChartData, lastData, averageData, userId }: DataProps) {
+export default function Component({ lineChartData, pieChartData, lastData, averageData }: DataProps) {
   const [selectedMetric, setSelectedMetric] = useState('ACTIVITIES');
 
   const formatLineChartData = () => {

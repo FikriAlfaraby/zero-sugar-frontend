@@ -67,7 +67,7 @@ const PieChartWithLegend: React.FC<PieChartWithLegendProps> = ({
                 paddingAngle={5}
                 labelLine={false}
               >
-                {data.map((entry, index) => (
+                {data.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={getColor(index)} />
                 ))}
               </Pie>
