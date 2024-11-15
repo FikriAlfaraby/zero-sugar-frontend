@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Area, AreaChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+import PieChartWithLegend from './PieChart';
 
 // Custom colors for better visualization
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -18,31 +20,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-// Custom label for pie charts
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  if (percent === 0) {
-    return null;
-  }
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? 'start' : 'end'}
-      dominantBaseline="central"
-      fontSize={12}
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
-
 type DataProps = {
+  userId: number;
   lineChartData: {
     user_id: number;
     data: {
@@ -77,7 +56,7 @@ type DataProps = {
   };
 };
 
-export default function Component({ lineChartData, pieChartData, lastData, averageData }: DataProps) {
+export default function Component({ lineChartData, pieChartData, lastData, averageData, userId }: DataProps) {
   const [selectedMetric, setSelectedMetric] = useState('ACTIVITIES');
 
   const formatLineChartData = () => {
@@ -125,11 +104,11 @@ export default function Component({ lineChartData, pieChartData, lastData, avera
         </Card>
       </div>
 
-      {/* Last Records Cards */}
+      {/* Most Records Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Last Sleep Quality</CardTitle>
+            <CardTitle className="text-sm font-medium">Most Sleep Quality</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold capitalize">{lastData.mode_sleep_quality}</div>
@@ -137,7 +116,7 @@ export default function Component({ lineChartData, pieChartData, lastData, avera
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Last Smoking Status</CardTitle>
+            <CardTitle className="text-sm font-medium">Most Smoking Status</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{lastData.mode_is_smoking ? 'Yes' : 'No'}</div>
@@ -145,7 +124,7 @@ export default function Component({ lineChartData, pieChartData, lastData, avera
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Last Stress Level</CardTitle>
+            <CardTitle className="text-sm font-medium">Most Stress Level</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold capitalize">{lastData.mode_stress_level}</div>
@@ -153,7 +132,7 @@ export default function Component({ lineChartData, pieChartData, lastData, avera
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Last Risk Profile</CardTitle>
+            <CardTitle className="text-sm font-medium">Most Risk Profile</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold capitalize">{lastData.mode_risk_profile}</div>
@@ -216,211 +195,32 @@ export default function Component({ lineChartData, pieChartData, lastData, avera
       {/* Pie Charts Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {/* Sleep Quality Pie Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Sleep Quality Distribution</CardTitle>
-          </CardHeader>
-          <CardContent className="p-2">
-            <div className="flex h-[250px] items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieChartData.data.sleep_quality}
-                    dataKey="Count"
-                    nameKey="Sleep_Quality"
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={70}
-                    innerRadius={35}
-                  >
-                    {pieChartData.data.sleep_quality
-                      .filter(entry => entry.Count > 0)
-                      .map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                  </Pie>
-                  <Tooltip formatter={(value, name) => {
-                    if (name === 'Smoking_Status') {
-                      return [value, name ? 'Yes' : 'No'];
-                    }
-                    return [value, name];
-                  }}
-                  />
-                  <Legend
-                    formatter={(value) => {
-                      if (value) {
-                        return 'Yes';
-                      }
-                      if (!value) {
-                        return 'No';
-                      }
-                      return value.charAt(0).toUpperCase() + value.slice(1);
-                    }}
-                    wrapperStyle={{ fontSize: 12 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+        <PieChartWithLegend
+          title="Sleep Quality Distribution"
+          data={pieChartData.data.sleep_quality}
+          dataKey="Count"
+          nameKey="Sleep_Quality"
+        />
+        <PieChartWithLegend
+          title="Smoking Status Distribution"
+          data={pieChartData.data.smoking_status}
+          labelFormatter={value => (value ? 'Ya' : 'Tidak')}
+          dataKey="Count"
+          nameKey="Smoking_Status"
+        />
+        <PieChartWithLegend
+          title="Stress Level Distribution"
+          data={pieChartData.data.stress_level}
+          dataKey="Count"
+          nameKey="Stress_Level"
+        />
+        <PieChartWithLegend
+          title="Risk Profile Distribution"
+          data={pieChartData.data.risk_profile}
+          dataKey="Count"
+          nameKey="Risk_Profile"
+        />
 
-        {/* Smoking Status Pie Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Smoking Status Distribution</CardTitle>
-          </CardHeader>
-          <CardContent className="p-2">
-            <div className="flex h-[250px] items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieChartData.data.smoking_status}
-                    dataKey="Count"
-                    nameKey="Smoking_Status"
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={70}
-                    innerRadius={35}
-                  >
-                    {pieChartData.data.smoking_status
-                      .filter(entry => entry.Count > 0)
-                      .map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                  </Pie>
-                  <Tooltip formatter={(value, name) => {
-                    if (name === 'Smoking_Status') {
-                      return [value, name ? 'Yes' : 'No'];
-                    }
-                    return [value, name];
-                  }}
-                  />
-                  <Legend
-                    formatter={(value) => {
-                      if (value) {
-                        return 'Yes';
-                      }
-                      if (!value) {
-                        return 'No';
-                      }
-                      return value.charAt(0).toUpperCase() + value.slice(1);
-                    }}
-                    wrapperStyle={{ fontSize: 12 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Stress Level Pie Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Stress Level Distribution</CardTitle>
-          </CardHeader>
-          <CardContent className="p-2">
-            <div className="flex h-[250px] items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieChartData.data.stress_level}
-                    dataKey="Count"
-                    nameKey="Stress_Level"
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={70}
-                    innerRadius={35}
-                  >
-                    {pieChartData.data.stress_level
-                      .filter(entry => entry.Count > 0)
-                      .map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                  </Pie>
-                  <Tooltip formatter={(value, name) => {
-                    if (name === 'Smoking_Status') {
-                      return [value, name ? 'Yes' : 'No'];
-                    }
-                    return [value, name];
-                  }}
-                  />
-                  <Legend
-                    formatter={(value) => {
-                      if (value) {
-                        return 'Yes';
-                      }
-                      if (!value) {
-                        return 'No';
-                      }
-                      return value.charAt(0).toUpperCase() + value.slice(1);
-                    }}
-                    wrapperStyle={{ fontSize: 12 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Risk Profile Pie Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Risk Profile Distribution</CardTitle>
-          </CardHeader>
-          <CardContent className="p-2">
-            <div className="flex h-[250px] items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieChartData.data.risk_profile}
-                    dataKey="Count"
-                    nameKey="Risk_Profile"
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={70}
-                    innerRadius={35}
-                  >
-                    {pieChartData.data.risk_profile
-                      .filter(entry => entry.Count > 0)
-                      .map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                  </Pie>
-                  <Tooltip formatter={(value, name) => {
-                    if (name === 'Smoking_Status') {
-                      return [value, name ? 'Yes' : 'No'];
-                    }
-                    return [value, name];
-                  }}
-                  />
-                  <Legend
-                    formatter={(value) => {
-                      if (value) {
-                        return 'Yes';
-                      }
-                      if (!value) {
-                        return 'No';
-                      }
-                      return value.charAt(0).toUpperCase() + value.slice(1);
-                    }}
-                    wrapperStyle={{ fontSize: 12 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
