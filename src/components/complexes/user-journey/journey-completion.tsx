@@ -47,7 +47,7 @@ export default function JourneyCompletion({ isEnd }: JourneyCompletionProps) {
           <h1 className="mb-4 text-3xl font-bold text-primary">Congratulations!</h1>
           <p className="mb-6 text-xl text-secondary-foreground">You've completed your journey!</p>
           <Button
-            onClick={() => router.push('/summary')}
+            onClick={() => router.push('/dashboard/summary')}
             className="rounded-full px-6 py-2 font-bold text-white transition-all duration-200 ease-in-out hover:scale-105"
           >
             Check Your Summary

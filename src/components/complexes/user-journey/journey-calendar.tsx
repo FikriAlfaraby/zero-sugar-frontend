@@ -10,7 +10,7 @@ type JourneyCalendarProps = {
   userJourney: UserJourney[];
 };
 
-export function JourneyCalendar({ completedDays, userJourney }: JourneyCalendarProps) {
+export function JourneyCalendar({ userJourney }: JourneyCalendarProps) {
   const [, setHoveredDay] = useState<number | null>(null);
 
   // Map each journey entry to its respective day index

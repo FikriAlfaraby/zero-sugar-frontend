@@ -31,10 +31,10 @@ export function ProfileCheck({ userId, onProfileComplete }: ProfileCheckProps) {
         gender: profileData.gender,
         phone_number: profileData.phoneNumber,
         weight,
-        height: height * 100, // Ubah kembali ke cm jika diperlukan
+        height: height * 100,
         is_diabetes: profileData.isDiabetes,
-        is_obesity: profileData.isObesity,
-        bmi: Number(bmi), // Pastikan BMI diubah menjadi angka
+        is_obesity: Number(bmi) >= 30,
+        bmi: Number(bmi),
         is_onboarding: true,
       };
 

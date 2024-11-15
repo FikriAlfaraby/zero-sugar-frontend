@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "author": "Ixartz (https://github.com/ixartz)",
   "scripts": {
-    "dev:spotlight": "spotlight-sidecar",
     "dev:next": "next dev",
     "dev": "run-p dev:*",
     "build": "next build",

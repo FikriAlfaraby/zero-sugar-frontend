@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,50 +10,130 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { UploadInput } from '@/components/ui/upload-input';
 import { toast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
-  sugarIntake: z.number().min(1).max(500),
   drinkConsumption: z.number().min(1).max(10),
   activities: z.number().min(1).max(24),
   hoursOfSleep: z.number().min(1).max(24),
   sleepQuality: z.enum(['Poor', 'Average', 'Good']),
   isSmoking: z.boolean(),
   stressLevel: z.enum(['Low', 'Moderate', 'High']),
-  riskProfile: z.enum(['Low', 'Medium', 'High']),
+  picture: z
+    .custom<FileList>(value => value instanceof FileList && value.length > 0, {
+      message: 'File is required.',
+    })
+    // biome-ignore lint/complexity/useOptionalChain: <explanation>
+    .refine(files => files && files[0].type.startsWith('image/'), {
+      message: 'Only image files are allowed.',
+    }),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
 
+type UserProfile = {
+  ID_PROFILE: number;
+  ID_USER: number;
+  NAME: string;
+  AGE: string; // Note: Age is a string in the provided data
+  GENDER: string;
+  PHONE_NUMBER: number; // Consider using string for very large numbers
+  WEIGHT: number;
+  HEIGHT: number;
+  IS_DIABETES: boolean;
+  IS_OBESITY: boolean;
+  BMI: number;
+  IS_ONBOARDING: boolean;
+  CREATED_AT: string; // ISO format
+  UPDATED_AT: string; // ISO format
+};
+
 export function DailyLogForm({ userId }: { userId: number }) {
   const queryClient = useQueryClient();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { data: profileData } = useQuery<UserProfile> ({
+    queryKey: ['profile', userId],
+    queryFn: async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+      return response.json();
+    },
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      sugarIntake: 0,
       drinkConsumption: 0,
       activities: 0,
       hoursOfSleep: 0,
       sleepQuality: 'Average',
       isSmoking: false,
       stressLevel: 'Low',
-      riskProfile: 'Low',
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (journeyData: FormSchema) => {
+      const sugarResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL2}/predict_sugar_intake`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+
+      if (!sugarResponse.ok) {
+        throw new Error('Failed to fetch sugar intake prediction');
+      }
+
+      const sugar = await sugarResponse.json();
+
+      const userData = {
+        Age: Number(profileData?.AGE),
+        Gender: profileData?.GENDER === 'male' ? 1 : 0,
+        Height: profileData?.HEIGHT,
+        Weight: profileData?.WEIGHT,
+        Is_Diabetes: profileData?.IS_DIABETES ? 1 : 0,
+        BMI: profileData?.BMI,
+        Sugar: sugar.predicted_sugar_intake,
+        Drink_Consumption: Number.parseFloat(journeyData.drinkConsumption.toString()),
+        Activities: Number.parseFloat(journeyData.activities.toString()),
+        Sleep_Hours: Number.parseInt(journeyData.hoursOfSleep.toString(), 10),
+        Is_Smoking: journeyData.isSmoking ? 1 : 0,
+      };
+
+      const profileRiskResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL2}/predict_profile_risk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (!profileRiskResponse.ok) {
+        throw new Error('Failed to fetch profile risk prediction');
+      }
+
+      const dataProfileRisk = await profileRiskResponse.json();
+
+      const riskMapping = {
+        0: 'Low Risk',
+        1: 'Neutral',
+        2: 'High Risk',
+        3: 'Very High Risk',
+      };
+
+      const riskProfile = riskMapping[dataProfileRisk.predicted_cluster];
+
+      // Define convertedData with properties in the specified order
       const convertedData = {
-        sugar: Number.parseFloat(journeyData.sugarIntake.toString()),
+        sugar: sugar.predicted_sugar_intake,
         drink_consumption: Number.parseFloat(journeyData.drinkConsumption.toString()),
         activities: Number.parseFloat(journeyData.activities.toString()),
         hours_sleep: Number.parseInt(journeyData.hoursOfSleep.toString(), 10),
         sleep_quality: journeyData.sleepQuality.toLowerCase(),
         is_smoking: journeyData.isSmoking,
         stress_level: journeyData.stressLevel.toLowerCase(),
-        risk_profile: journeyData.riskProfile.toLowerCase(),
+        risk_profile: riskProfile,
       };
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/journey/${userId}`, {
@@ -64,7 +144,6 @@ export function DailyLogForm({ userId }: { userId: number }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        // Check for the specific error message
         if (errorData.error === 'User telah mengisi journey hari ini') {
           throw new Error('User telah mengisi journey hari ini');
         }
@@ -103,20 +182,12 @@ export function DailyLogForm({ userId }: { userId: number }) {
 
   return (
     <Form {...form}>
+      <FormField
+        control={form.control}
+        name="picture"
+        render={({ field }) => <UploadInput field={field} />}
+      />
       <form onSubmit={form.handleSubmit(onSubmitForm)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="sugarIntake"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sugar Intake (g)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(Number.parseFloat(e.target.value))} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="drinkConsumption"
@@ -213,28 +284,6 @@ export function DailyLogForm({ userId }: { userId: number }) {
                 <SelectContent>
                   <SelectItem value="Low">Low</SelectItem>
                   <SelectItem value="Moderate">Moderate</SelectItem>
-                  <SelectItem value="High">High</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="riskProfile"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Risk Profile</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select risk profile" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Low">Low</SelectItem>
-                  <SelectItem value="Medium">Medium</SelectItem>
                   <SelectItem value="High">High</SelectItem>
                 </SelectContent>
               </Select>

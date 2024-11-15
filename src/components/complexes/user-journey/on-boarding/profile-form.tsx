@@ -16,7 +16,6 @@ const profileSchema = z.object({
   weight: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Weight must be a number.' }),
   height: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Height must be a number.' }),
   isDiabetes: z.boolean(),
-  isObesity: z.boolean(),
 });
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -37,7 +36,6 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
       weight: '',
       height: '',
       isDiabetes: false,
-      isObesity: false,
     },
   });
 
@@ -138,20 +136,6 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Diabetes</FormLabel>
-              </div>
-              <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="isObesity"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Obesity</FormLabel>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
