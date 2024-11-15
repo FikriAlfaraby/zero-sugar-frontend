@@ -17,7 +17,6 @@ const profileSchema = z.object({
   height: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Height must be a number.' }),
   isDiabetes: z.boolean(),
   isObesity: z.boolean(),
-  bmi: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'BMI must be a number.' }),
 });
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -39,7 +38,6 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
       height: '',
       isDiabetes: false,
       isObesity: false,
-      bmi: '',
     },
   });
 
@@ -53,7 +51,7 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Enter your full name" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,7 +64,7 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
             <FormItem>
               <FormLabel>Age</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Enter your age in years" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,7 +99,7 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Enter a valid phone number" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,7 +112,7 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
             <FormItem>
               <FormLabel>Weight (kg)</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Enter weight in kilograms" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -127,7 +125,7 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
             <FormItem>
               <FormLabel>Height (cm)</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Enter height in centimeters" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,10 +140,7 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
                 <FormLabel className="text-base">Diabetes</FormLabel>
               </div>
               <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
               </FormControl>
             </FormItem>
           )}
@@ -159,24 +154,8 @@ export function ProfileForm({ onSubmit, isLoading }: ProfileFormProps) {
                 <FormLabel className="text-base">Obesity</FormLabel>
               </div>
               <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
               </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="bmi"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>BMI</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />

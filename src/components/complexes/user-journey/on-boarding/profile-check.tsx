@@ -18,16 +18,23 @@ export function ProfileCheck({ userId, onProfileComplete }: ProfileCheckProps) {
 
   const profileMutation = useMutation({
     mutationFn: async (profileData: ProfileFormValues) => {
+      const weight = Number.parseFloat(profileData.weight);
+      const height = Number.parseFloat(profileData.height) / 100; // Ubah cm ke meter
+
+      // Hitung BMI
+      const bmi = (weight / (height * height)).toFixed(2); // Hasil BMI dalam format string dengan 2 angka desimal
+
+      // Siapkan data yang akan dikirim
       const convertedData = {
         name: profileData.name,
         age: Number.parseInt(profileData.age),
         gender: profileData.gender,
         phone_number: profileData.phoneNumber,
-        weight: Number.parseFloat(profileData.weight),
-        height: Number.parseFloat(profileData.height),
+        weight,
+        height: height * 100, // Ubah kembali ke cm jika diperlukan
         is_diabetes: profileData.isDiabetes,
         is_obesity: profileData.isObesity,
-        bmi: Number.parseFloat(profileData.bmi),
+        bmi: Number(bmi), // Pastikan BMI diubah menjadi angka
         is_onboarding: true,
       };
 

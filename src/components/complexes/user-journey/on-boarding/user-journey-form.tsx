@@ -1,112 +1,104 @@
-'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 
-const formSchema = z.object({
-  sugar: z.number().min(0).max(1000),
-  drink_consumption: z.number().min(0).max(1000),
-  activities: z.number().min(0).max(24),
-  hours_sleep: z.number().min(0).max(24),
-  sleep_quality: z.enum(['Good', 'Average', 'Poor']),
-  is_smoking: z.boolean(),
-  stress_level: z.enum(['Low', 'Medium', 'High']),
-  risk_profile: z.enum(['Low', 'Moderate', 'High']),
+const userJourneySchema = z.object({
+  sugarIntake: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Sugar intake must be a number.' }),
+  drinkConsumption: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Drink consumption must be a number.' }),
+  activities: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Activities must be a number.' }),
+  hoursOfSleep: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Hours of sleep must be a number.' }),
+  sleepQuality: z.enum(['Poor', 'Average', 'Good']),
+  isSmoking: z.boolean(),
+  stressLevel: z.enum(['Low', 'Moderate', 'High']),
+  riskProfile: z.enum(['Low', 'Medium', 'High']),
 });
 
-export default function SugarIntakeForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+type UserJourneyFormValues = z.infer<typeof userJourneySchema>;
+
+type UserJourneyFormProps = {
+  onSubmit: (data: UserJourneyFormValues) => void;
+  isLoading: boolean;
+};
+
+export function UserJourneyForm({ onSubmit, isLoading }: UserJourneyFormProps) {
+  const form = useForm<UserJourneyFormValues>({
+    resolver: zodResolver(userJourneySchema),
     defaultValues: {
-      sugar: 0,
-      drink_consumption: 0,
-      activities: 0,
-      hours_sleep: 0,
-      sleep_quality: 'Average',
-      is_smoking: false,
-      stress_level: 'Medium',
-      risk_profile: 'Moderate',
+      sugarIntake: '',
+      drinkConsumption: '',
+      activities: '',
+      hoursOfSleep: '',
+      sleepQuality: 'Average',
+      isSmoking: false,
+      stressLevel: 'Moderate',
+      riskProfile: 'Medium',
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // eslint-disable-next-line no-console
-    console.log(values);
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="sugar"
+          name="sugarIntake"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sugar Intake (grams)</FormLabel>
+              <FormLabel>Sugar Intake (g)</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(Number.parseFloat(e.target.value))} />
+                <Input {...field} placeholder="Enter daily sugar intake in grams" />
               </FormControl>
-              <FormDescription>Enter the amount of sugar consumed in grams.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="drink_consumption"
+          name="drinkConsumption"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sugary Drink Consumption (ml)</FormLabel>
+              <FormLabel>Drink Consumption (ml)</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(Number.parseFloat(e.target.value))} />
+                <Input {...field} placeholder="Enter daily drink intake in milliliters" />
               </FormControl>
-              <FormDescription>Enter the amount of sugary drinks consumed in milliliters.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="activities"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Physical Activities (hours)</FormLabel>
+              <FormLabel>Activities (hours)</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(Number.parseFloat(e.target.value))} />
+                <Input {...field} placeholder="Enter activity duration in hours" />
               </FormControl>
-              <FormDescription>Enter the number of hours spent on physical activities.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="hours_sleep"
+          name="hoursOfSleep"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Hours of Sleep</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(Number.parseFloat(e.target.value))} />
+                <Input {...field} placeholder="Enter number of hours slept" />
               </FormControl>
-              <FormDescription>Enter the number of hours you slept.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="sleep_quality"
+          name="sleepQuality"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Sleep Quality</FormLabel>
@@ -117,27 +109,22 @@ export default function SugarIntakeForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Good">Good</SelectItem>
-                  <SelectItem value="Average">Average</SelectItem>
                   <SelectItem value="Poor">Poor</SelectItem>
+                  <SelectItem value="Average">Average</SelectItem>
+                  <SelectItem value="Good">Good</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>Select the quality of your sleep.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="is_smoking"
+          name="isSmoking"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Smoking</FormLabel>
-                <FormDescription>
-                  Did you smoke today?
-                </FormDescription>
               </div>
               <FormControl>
                 <Switch
@@ -148,10 +135,9 @@ export default function SugarIntakeForm() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="stress_level"
+          name="stressLevel"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Stress Level</FormLabel>
@@ -163,19 +149,17 @@ export default function SugarIntakeForm() {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="Low">Low</SelectItem>
-                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="Moderate">Moderate</SelectItem>
                   <SelectItem value="High">High</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>Select your stress level for today.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="risk_profile"
+          name="riskProfile"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Risk Profile</FormLabel>
@@ -187,17 +171,17 @@ export default function SugarIntakeForm() {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="Low">Low</SelectItem>
-                  <SelectItem value="Moderate">Moderate</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
                   <SelectItem value="High">High</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>Select your risk profile.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? 'Logging...' : 'Log My Day'}
+        </Button>
       </form>
     </Form>
   );

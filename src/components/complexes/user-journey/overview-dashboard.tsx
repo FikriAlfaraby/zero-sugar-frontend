@@ -7,6 +7,9 @@ type OverviewDashboardProps = {
 };
 
 export function OverviewDashboard({ completedDays, streak }: OverviewDashboardProps) {
+  const totalDays = 30;
+  const completionPercentage = (completedDays / totalDays) * 100;
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
       <Card>
@@ -14,13 +17,23 @@ export function OverviewDashboard({ completedDays, streak }: OverviewDashboardPr
           <CardTitle>Progress</CardTitle>
         </CardHeader>
         <CardContent>
-          <Progress value={(completedDays / 30) * 100} className="w-full" />
+          <Progress value={completionPercentage} className="w-full" />
           <p className="mt-2 text-center">
             You've completed
             {' '}
             {completedDays}
             {' '}
-            out of 30 days.
+            out of
+            {' '}
+            {totalDays}
+            {' '}
+            days.
+          </p>
+          <p className="text-center text-sm text-gray-500">
+            Completion:
+            {' '}
+            {completionPercentage.toFixed(1)}
+            %
           </p>
         </CardContent>
       </Card>

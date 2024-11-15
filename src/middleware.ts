@@ -19,10 +19,19 @@ export default function middleware(
   request: NextRequest,
   event: NextFetchEvent,
 ) {
+  const { pathname, origin } = request.nextUrl;
+
+  // Check if the path is root (/) or contains a locale (e.g., /en or /es)
+  const localeMatch = pathname.match(/^\/([a-z]{2})(\/?)$/);
+  if (pathname === '/' || localeMatch) {
+    const locale = localeMatch?.[1] || AppConfig.defaultLocale;
+    return Response.redirect(`${origin}/${locale}/dashboard`);
+  }
+
   // Run Clerk middleware only when it's necessary
   if (
-    request.nextUrl.pathname.includes('/sign-in')
-    || request.nextUrl.pathname.includes('/sign-up')
+    pathname.includes('/sign-in')
+    || pathname.includes('/sign-up')
     || isProtectedRoute(request)
   ) {
     return clerkMiddleware((auth, req) => {
@@ -33,7 +42,6 @@ export default function middleware(
         const signInUrl = new URL(`${locale}/sign-in`, req.url);
 
         auth().protect({
-          // `unauthenticatedUrl` is needed to avoid error: "Unable to find `next-intl` locale because the middleware didn't run on this request"
           unauthenticatedUrl: signInUrl.toString(),
         });
       }
@@ -46,5 +54,5 @@ export default function middleware(
 }
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next|monitoring).*)', '/', '/(api|trpc)(.*)'], // Also exclude tunnelRoute used in Sentry from the matcher
+  matcher: ['/((?!.+\\.[\\w]+$|_next|monitoring).*)', '/', '/(api|trpc)(.*)'],
 };

@@ -5,9 +5,11 @@ import { useEffect, useState } from 'react';
 
 import { Spinner } from '@/components/ui/spinner';
 
+import JourneyCompletion from '../journey-completion';
+import { useUserJourney } from '../service/fetchUserJourney.service';
+import UserJourney from '../user-journey';
 import { InitialUserJourney } from './initial-journey';
 import { ProfileCheck } from './profile-check';
-import UserJourney from './user-journey';
 
 export default function OnboardingFlow({ userId }: { userId: number }) {
   const [step, setStep] = useState<'profile' | 'journey' | 'dashboard'>('profile');
@@ -23,22 +25,13 @@ export default function OnboardingFlow({ userId }: { userId: number }) {
     },
   });
 
-  const { data: userJourney, isLoading: isJourneyLoading } = useQuery({
-    queryKey: ['userJourney', userId],
-    queryFn: async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/journey/${userId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch user journey');
-      }
-      return response.json();
-    },
-  });
+  const { data: userJourney, isLoading: isJourneyLoading } = useUserJourney(userId);
 
   useEffect(() => {
     if (profile && !isProfileLoading) {
       setStep('journey');
     }
-    if (userJourney && userJourney.length > 0 && !isJourneyLoading) {
+    if (userJourney && userJourney.data.length > 0 && !isJourneyLoading) {
       setStep('dashboard');
     }
   }, [profile, userJourney, isProfileLoading, isJourneyLoading]);
@@ -56,23 +49,34 @@ export default function OnboardingFlow({ userId }: { userId: number }) {
   }
 
   if (isProfileLoading || isJourneyLoading) {
-    return <div className="flex h-[calc(100vh-60px)] items-center justify-center bg-background"><Spinner /></div>;
+    return (
+      <div className="flex h-[calc(100vh-60px)] items-center justify-center bg-background">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
     <>
-      {step !== 'dashboard' && (
-        <div className="flex h-[calc(100vh-60px)] items-center justify-center bg-background">
-          {step === 'profile' && (
-            <ProfileCheck userId={userId} onProfileComplete={handleProfileComplete} />
+      {userJourney?.isEnd
+        ? (
+            <JourneyCompletion isEnd={userJourney.isEnd} />
+          )
+        : (
+            <>
+              {step !== 'dashboard' && (
+                <div className="flex h-[calc(100vh-60px)] items-center justify-center bg-background">
+                  {step === 'profile' && (
+                    <ProfileCheck userId={userId} onProfileComplete={handleProfileComplete} />
+                  )}
+                  {step === 'journey' && (
+                    <InitialUserJourney userId={userId} onJourneyComplete={handleJourneyComplete} />
+                  )}
+                </div>
+              )}
+              {step === 'dashboard' && <UserJourney userId={userId} />}
+            </>
           )}
-          {step === 'journey' && (
-            <InitialUserJourney userId={userId} onJourneyComplete={handleJourneyComplete} />
-          )}
-        </div>
-      )}
-
-      {step === 'dashboard' && <UserJourney />}
     </>
   );
 }

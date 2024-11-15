@@ -22,7 +22,7 @@ type MenuItemId = 'dashboard' | 'userJourney' | 'katalogAhli' | 'summary' | 'fee
 const items: { id: MenuItemId; url: string; icon: LucideIcon }[] = [
   { id: 'dashboard', url: '/dashboard', icon: Home },
   { id: 'userJourney', url: '/dashboard/user-journey', icon: Navigation },
-  { id: 'katalogAhli', url: '/dashboard/katalog-ahli', icon: BookOpen },
+  { id: 'katalogAhli', url: '/dashboard/catalog', icon: BookOpen },
   { id: 'summary', url: '/dashboard/summary', icon: PieChart },
   { id: 'feedback', url: '/dashboard/feedback', icon: MessageSquare },
 ];

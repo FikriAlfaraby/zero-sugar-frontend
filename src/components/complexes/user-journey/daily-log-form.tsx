@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,18 +13,22 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
-  sugarIntake: z.number().min(0).max(500),
-  drinkConsumption: z.number().min(0).max(10),
-  activities: z.number().min(0).max(24),
-  hoursOfSleep: z.number().min(0).max(24),
+  sugarIntake: z.number().min(1).max(500),
+  drinkConsumption: z.number().min(1).max(10),
+  activities: z.number().min(1).max(24),
+  hoursOfSleep: z.number().min(1).max(24),
   sleepQuality: z.enum(['Poor', 'Average', 'Good']),
   isSmoking: z.boolean(),
   stressLevel: z.enum(['Low', 'Moderate', 'High']),
   riskProfile: z.enum(['Low', 'Medium', 'High']),
 });
 
-export function DailyLogForm({ onSubmit }: { onSubmit: any }) {
+type FormSchema = z.infer<typeof formSchema>;
+
+export function DailyLogForm({ userId }: { userId: number }) {
+  const queryClient = useQueryClient();
   const [isSubmitted, setIsSubmitted] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,15 +43,63 @@ export function DailyLogForm({ onSubmit }: { onSubmit: any }) {
     },
   });
 
-  function onSubmitForm(values: z.infer<typeof formSchema>) {
-    onSubmit(values);
-    setIsSubmitted(true);
-    toast({
-      title: 'Daily log submitted!',
-      description: 'Your progress has been updated.',
-    });
-    setTimeout(() => setIsSubmitted(false), 3000);
-  }
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (journeyData: FormSchema) => {
+      const convertedData = {
+        sugar: Number.parseFloat(journeyData.sugarIntake.toString()),
+        drink_consumption: Number.parseFloat(journeyData.drinkConsumption.toString()),
+        activities: Number.parseFloat(journeyData.activities.toString()),
+        hours_sleep: Number.parseInt(journeyData.hoursOfSleep.toString(), 10),
+        sleep_quality: journeyData.sleepQuality.toLowerCase(),
+        is_smoking: journeyData.isSmoking,
+        stress_level: journeyData.stressLevel.toLowerCase(),
+        risk_profile: journeyData.riskProfile.toLowerCase(),
+      };
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/journey/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(convertedData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        // Check for the specific error message
+        if (errorData.error === 'User telah mengisi journey hari ini') {
+          throw new Error('User telah mengisi journey hari ini');
+        }
+        throw new Error('Failed to save user journey');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      form.reset();
+      setIsSubmitted(true);
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['userJourney', userId] });
+        setIsSubmitted(false);
+      }, 2000);
+    },
+    onError: (error) => {
+      console.error('Error submitting journey data:', error);
+
+      if (error.message === 'User telah mengisi journey hari ini') {
+        toast({
+          title: 'Jangan Gegabah',
+          description: 'Anda sudah mengsubmit hari ini',
+        });
+      } else {
+        console.error('An unexpected error occurred:', error);
+      }
+
+      setTimeout(() => setIsSubmitted(false), 2000);
+    },
+  });
+
+  const onSubmitForm = (data: FormSchema) => {
+    mutate(data);
+  };
 
   return (
     <Form {...form}>
@@ -189,10 +242,12 @@ export function DailyLogForm({ onSubmit }: { onSubmit: any }) {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit Daily Log</Button>
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending ? 'Logging...' : 'Submit Daily Log'}
+        </Button>
       </form>
       {isSubmitted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-all">
           <div className="flex flex-col items-center rounded-lg bg-white p-8">
             <CheckCircle className="mb-4 size-16 text-green-500" />
             <p className="text-xl font-bold">Daily Log Submitted!</p>
