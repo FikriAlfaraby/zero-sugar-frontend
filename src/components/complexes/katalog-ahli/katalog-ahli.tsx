@@ -20,7 +20,7 @@ export default function Home() {
       <h1 className="mb-6 text-3xl font-bold">Katalog Ahli</h1>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data?.map(expert => (
-          <Card key={expert.ID}>
+          <Card key={expert.ID_CATALOG}>
             <CardContent className="pt-6">
               <h2 className="text-xl font-semibold">
                 {expert.TITLE}
@@ -42,7 +42,7 @@ export default function Home() {
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button asChild>
-                <Link href={`/expert/${expert.ID}`}>Detail</Link>
+                <Link href={`/expert/${expert.ID_CATALOG}`}>Detail</Link>
               </Button>
               <Button variant="outline" asChild>
                 <Link href={`https://wa.me/${expert.WHATSAPP}?text=${encodeURIComponent(`Halo ${expert.TITLE} ${expert.NAME}, saya melihat profil Anda di Katalog Ahli dan ingin berdiskusi lebih lanjut mengenai ${expert.SPECIALIZATION}. Apakah Anda tersedia?`)}`}>
