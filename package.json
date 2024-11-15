@@ -108,7 +108,6 @@
     "cross-env": "^7.0.3",
     "cssnano": "^7.0.6",
     "dotenv-cli": "^7.4.2",
-    "eslint": "^8.57.1",
     "eslint-plugin-format": "^0.1.2",
     "eslint-plugin-jest-dom": "^5.4.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
