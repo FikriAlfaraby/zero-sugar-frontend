@@ -64,7 +64,7 @@ export default function UserJourney({ userId }: { userId: number }) {
     <div className="container mx-auto space-y-8 p-4">
       <h1 className="mb-8 text-center text-3xl font-bold">Your Wellness Journey</h1>
       <OverviewDashboard completedDays={completedDays} streak={streak} />
-      {hasFilledToday
+      {false
         ? (
             <Alert>
               <CheckCircle className="size-4" />
