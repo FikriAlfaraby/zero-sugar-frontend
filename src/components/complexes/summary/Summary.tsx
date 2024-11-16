@@ -11,7 +11,7 @@ import { useUserJourney } from '../user-journey/service/fetchUserJourney.service
 import { useAvgSummary } from './hooks/fetchAvgService.service';
 import { useLineChartSummary } from './hooks/fetchLineChart.service';
 import { usePieChartSummary } from './hooks/fetchPieChart.service';
-import { useModusSummary } from './hooks/fetchModus.service';
+import { type AvgModus } from './hooks/fetchModus.service';
 import AvgSkeleton from './skeleton/avg-skeleton';
 import LineChartSkeleton from './skeleton/line-skeleton';
 import PieChartsGridSkeleton from './skeleton/pie-skeleton';
@@ -21,13 +21,12 @@ const EmptyComponent = () => (
   <div className="flex justify-center items-center text-gray-500">No data available</div>
 );
 
-export default function DashboardContainer({ userId }: { userId: number }) {
+export default function DashboardContainer({ userId, mostData }: { userId: number, mostData : AvgModus }) {
   // Fetch hooks
   const { data: journeyData, isLoading: isJourneyLoading } = useUserJourney(userId);
   const { data: avgData, isLoading: isAvgLoading } = useAvgSummary(userId);
   const { data: lineData, isLoading: isLineLoading } = useLineChartSummary(userId);
   const { data: pieData, isLoading: isPieLoading } = usePieChartSummary(userId);
-  const { data: mostData, isLoading: isMostLoading } = useModusSummary(userId);
 
 
   // Global loading state for user journey
@@ -57,13 +56,8 @@ export default function DashboardContainer({ userId }: { userId: number }) {
       )}
 
       {/* Most Records Cards */}
-      {isMostLoading && !isJourneyLoading ? (
-        <AvgSkeleton/>
-      ) : mostData ? (
-        <MostCards mostData={mostData} />
-      ) : (
-        <EmptyComponent />
-      )}
+    
+      <MostCards mostData={mostData} />
 
       {/* Line Chart */}
       {isLineLoading && !isJourneyLoading ? (

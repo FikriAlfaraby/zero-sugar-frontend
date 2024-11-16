@@ -21,9 +21,6 @@ export default bundleAnalyzer(
       ignoreDuringBuilds: true,
     },
     poweredByHeader: false,
-    experimental: {
-      serverComponentsExternalPackages: [`require-in-the-middle`],
-    },
     reactStrictMode: true,
   }),
 );

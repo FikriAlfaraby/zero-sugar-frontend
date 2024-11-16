@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Ixartz (https://github.com/ixartz)",
   "scripts": {
-    "dev:next": "next dev",
+    "dev:next": "next dev --turbo",
     "dev": "run-p dev:*",
     "build": "next build",
     "start": "next start",
