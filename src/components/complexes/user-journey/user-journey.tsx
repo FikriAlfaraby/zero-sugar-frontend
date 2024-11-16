@@ -16,7 +16,7 @@ export default function UserJourney({ userId }: { userId: number }) {
 
   const [completedDays, setCompletedDays] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
-  const [hasFilledToday, setHasFilledToday] = useState<boolean>(false);
+  const [_, setHasFilledToday] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isJourneyLoading && userJourneyResponse && userJourneyResponse.data.length) {
