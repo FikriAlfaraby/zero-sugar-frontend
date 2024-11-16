@@ -21,10 +21,9 @@ const formSchema = z.object({
   isSmoking: z.boolean(),
   stressLevel: z.enum(['Low', 'Moderate', 'High']),
   picture: z
-    .custom<FileList>(value => value instanceof FileList && value.length > 0, {
-      message: 'File is required.',
-    })
-    .refine(files => Array.isArray(files) && files[0]?.type.startsWith('image/'), {
+    .instanceof(FileList)
+    .refine((files) => files.length > 0, { message: 'File is required.' })
+    .refine((files) => files[0]?.type.startsWith('image/'), {
       message: 'Only image files are allowed.',
     }),
 });
