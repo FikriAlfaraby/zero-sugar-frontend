@@ -1,62 +1,128 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { useUserJourney } from '../user-journey/service/fetchUserJourney.service';
 
-export function HealthOverview() {
-  const nutrients = [
-    { name: 'Sugar', current: 45, limit: 50, status: 'normal' },
-    { name: 'Salt', current: 5, limit: 6, status: 'warning' },
-    { name: 'Fat', current: 55, limit: 65, status: 'normal' },
-  ];
+// Helper function to convert to GMT+7
+const getTodayInGMT7 = () => {
+  const now = new Date();
+  const gmt7 = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Jakarta',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now);
+
+  // Format date to YYYY-MM-DD
+  const [month, day, year] = gmt7.split('/');
+  return `${year}-${month}-${day}`;
+};
+
+export function HealthOverview({userId} : {userId : number}) {
+    const { data} = useUserJourney(userId);
+
+  const today = getTodayInGMT7();
+
+  // Filter data berdasarkan tanggal hari ini
+  const todayData = data ?
+  data.data.find((entry) => entry.CREATED_AT === today) || {
+    CREATED_AT: '',
+    SUGAR: 0,
+    DRINK_CONSUMPTION: 0,
+    RISK_PROFILE: 'Belum Ada',
+  } : {
+    CREATED_AT: '',
+    SUGAR: 0,
+    DRINK_CONSUMPTION: 0,
+    RISK_PROFILE: 'Belum Ada',
+  };
+
+  const isDataAvailable = todayData.CREATED_AT === today;
+
 
   return (
-    <>
-      {nutrients.map(nutrient => (
-        <Card key={nutrient.name}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {nutrient.name}
-              {' '}
-              Intake
+    <div className="space-y-4">
+      {!isDataAvailable && (
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Alert className="border-l-4 border-red-500 bg-red-50 text-red-800 shadow">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-6 w-6 text-red-500" />
+              <div>
+                <AlertTitle className="text-lg font-bold">
+                  Data Tidak Ditemukan
+                </AlertTitle>
+                <AlertDescription className="mt-2 text-sm">
+                  <div className='flex items-center space-x-1'>
+                    <div className='h-fit'>Belum ada data untuk hari ini.</div>
+                    <Link href="/dashboard/user-journey">
+                      <Button className="px-0 h-fit py-0 text-sm text-red-800" variant="link">
+                        Klik Untuk Mengisi!
+                      </Button>
+                    </Link>
+                
+                  </div>
+                  
+                </AlertDescription>
+              </div>
+            </div>
+          </Alert>
+        </motion.div>
+      )}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="w-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-semibold text-gray-800">
+              Sugar Intake
             </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="size-4 text-muted-foreground"
-            >
-              <path d="M12 2v20M2 12h20" />
-            </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {nutrient.current}
-              g
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">{todayData.SUGAR} g</span>
             </div>
-            <p className="text-xs text-muted-foreground">
-              of
-              {' '}
-              {nutrient.limit}
-              g daily limit
-            </p>
-            <Progress
-              value={(nutrient.current / nutrient.limit) * 100}
-              className="mt-2"
-            />
-            <p className={`mt-2 text-xs ${
-              nutrient.status === 'normal' ? 'text-green-500' : 'text-yellow-500'
-            }`}
-            >
-              {nutrient.status === 'normal' ? 'Within safe limits' : 'Approaching limit'}
+            <p className="text-sm text-gray-600 mt-2">
+              Konsumsi gula Anda hari ini.
             </p>
           </CardContent>
         </Card>
-      ))}
-    </>
+        <Card className="w-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-semibold text-gray-800">
+              Drink Consumption
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">
+                {(todayData.DRINK_CONSUMPTION / 4).toFixed(1)} L
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Asupan cairan Anda hari ini.
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="w-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-semibold text-gray-800">
+              Risk Profile
+            </CardTitle>
+          </CardHeader>
+          <CardContent className='flex items-center'>
+            <span className="md:text-2xl text-lg font-bold text-teal-500">
+              {todayData.RISK_PROFILE}
+            </span>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

@@ -24,8 +24,7 @@ const formSchema = z.object({
     .custom<FileList>(value => value instanceof FileList && value.length > 0, {
       message: 'File is required.',
     })
-    // biome-ignore lint/complexity/useOptionalChain: <explanation>
-    .refine(files => files && files[0].type.startsWith('image/'), {
+    .refine(files => Array.isArray(files) && files[0]?.type.startsWith('image/'), {
       message: 'Only image files are allowed.',
     }),
 });
@@ -122,7 +121,7 @@ export function DailyLogForm({ userId }: { userId: number }) {
         3: 'Very High Risk',
       };
 
-      const riskProfile = riskMapping[dataProfileRisk.predicted_cluster];
+const riskProfile = riskMapping[dataProfileRisk.predicted_cluster as keyof typeof riskMapping];
 
       // Define convertedData with properties in the specified order
       const convertedData = {

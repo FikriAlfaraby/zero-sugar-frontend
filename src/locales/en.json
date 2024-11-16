@@ -69,6 +69,18 @@
     "meta_title": "Dashboard",
     "hello_message": "Hello {email}!"
   },
+ "UserJourney": {
+    "meta_title": "User Journey"
+  },
+  "Catalog": {
+    "meta_title": "Expert Catalog"
+  },
+  "Summary": {
+    "meta_title": "Summary"
+  },
+  "Feedback": {
+    "meta_title": "Feedback"
+  },
   "UserProfile": {
     "meta_title": "User Profile"
   },
@@ -148,8 +160,8 @@
     "notifications": "Notifications"
   },
   "cardTitles": {
-    "consumptionHistory": "Consumption History",
-    "analysisInsights": "Analysis & Insights",
+    "consumptionHistory": "Consumption History Sugar",
+    "analysisInsights": "Reminder",
     "dietaryGuide": "Dietary Guide"
   }
 }

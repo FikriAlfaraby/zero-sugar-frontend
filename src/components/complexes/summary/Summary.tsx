@@ -1,224 +1,87 @@
 'use client';
 
-import { useState } from 'react';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Spinner } from '@/components/ui/spinner';
+import SummaryNotFinished from './SummaryNotFinished';
+import AverageCards from './avg-card';
+import MostCards from './most-card';
+import LineChart from './line-chart';
+import PieChartsGrid from './pie-chart-grid';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useUserJourney } from '../user-journey/service/fetchUserJourney.service';
+import { useAvgSummary } from './hooks/fetchAvgService.service';
+import { useLineChartSummary } from './hooks/fetchLineChart.service';
+import { usePieChartSummary } from './hooks/fetchPieChart.service';
+import { useModusSummary } from './hooks/fetchModus.service';
+import AvgSkeleton from './skeleton/avg-skeleton';
+import LineChartSkeleton from './skeleton/line-skeleton';
+import PieChartsGridSkeleton from './skeleton/pie-skeleton';
 
-import PieChartWithLegend from './PieChart';
+// Komponen Empty untuk menampilkan ketika data tidak ada
+const EmptyComponent = () => (
+  <div className="flex justify-center items-center text-gray-500">No data available</div>
+);
+
+export default function DashboardContainer({ userId }: { userId: number }) {
+  // Fetch hooks
+  const { data: journeyData, isLoading: isJourneyLoading } = useUserJourney(userId);
+  const { data: avgData, isLoading: isAvgLoading } = useAvgSummary(userId);
+  const { data: lineData, isLoading: isLineLoading } = useLineChartSummary(userId);
+  const { data: pieData, isLoading: isPieLoading } = usePieChartSummary(userId);
+  const { data: mostData, isLoading: isMostLoading } = useModusSummary(userId);
 
 
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: '#2563eb',
-  },
-} satisfies ChartConfig;
+  // Global loading state for user journey
+  if (isJourneyLoading) {
+    return (
+      <div className="flex h-[calc(100vh-60px)] items-center justify-center bg-background">
+        <Spinner />
+      </div>
+    );
+  }
 
-type DataProps = {
-  userId: number;
-  lineChartData: {
-    user_id: number;
-    data: {
-      SUGAR: Array<{ Count: number; Date: string }>;
-      DRINK_CONSUMPTION: Array<{ Count: number; Date: string }>;
-      ACTIVITIES: Array<{ Count: number; Date: string }>;
-      HOURS_SLEEP: Array<{ Count: number; Date: string }>;
-    };
-  };
-  pieChartData: {
-    data: {
-      risk_profile: Array<{ Count: number; Risk_Profile: string }>;
-      sleep_quality: Array<{ Count: number; Sleep_Quality: string }>;
-      smoking_status: Array<{ Count: number; Smoking_Status: boolean }>;
-      stress_level: Array<{ Count: number; Stress_Level: string }>;
-    };
-    user_id: number;
-  };
-  lastData: {
-    mode_is_smoking: boolean;
-    mode_risk_profile: string;
-    mode_sleep_quality: string;
-    mode_stress_level: string;
-    user_id: number;
-  };
-  averageData: {
-    avg_activities: number;
-    avg_drink_consumption: number;
-    avg_hours_sleep: number;
-    avg_sugar: number;
-    user_id: number;
-  };
-};
+  // Display incomplete summary if necessary
+  if (!journeyData?.isEnd) {
+    return <SummaryNotFinished firstDate={journeyData?.data[0]?.CREATED_AT ?? ''} />;
+  }
 
-export default function Component({ lineChartData, pieChartData, lastData, averageData }: DataProps) {
-  const [selectedMetric, setSelectedMetric] = useState('ACTIVITIES');
-
-  const formatLineChartData = () => {
-    return lineChartData.data[selectedMetric as keyof typeof lineChartData.data].map(item => ({
-      date: new Date(item.Date).toLocaleDateString(),
-      value: item.Count,
-    }));
-  };
-
+  // Render main dashboard
   return (
     <div className="space-y-6 p-4">
       {/* Average Cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">AVG Sugar</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{averageData.avg_sugar.toFixed(1)}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">AVG Drink</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{averageData.avg_drink_consumption.toFixed(1)}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">AVG Activities</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{averageData.avg_activities.toFixed(1)}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">AVG Sleep Hours</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{averageData.avg_hours_sleep.toFixed(1)}</div>
-          </CardContent>
-        </Card>
-      </div>
+      {isAvgLoading && !isJourneyLoading ? (
+          <AvgSkeleton/>
+      ) : avgData ? (
+        <AverageCards avgData={avgData} />
+      ) : (
+        <EmptyComponent />
+      )}
 
       {/* Most Records Cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Most Sleep Quality</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold capitalize">{lastData.mode_sleep_quality}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Most Smoking Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{lastData.mode_is_smoking ? 'Yes' : 'No'}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Most Stress Level</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold capitalize">{lastData.mode_stress_level}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Most Risk Profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold capitalize">{lastData.mode_risk_profile}</div>
-          </CardContent>
-        </Card>
-      </div>
+      {isMostLoading && !isJourneyLoading ? (
+        <AvgSkeleton/>
+      ) : mostData ? (
+        <MostCards mostData={mostData} />
+      ) : (
+        <EmptyComponent />
+      )}
 
-      {/* Area Chart */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Trends Over Time</CardTitle>
-            <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select metric" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ACTIVITIES">Activities</SelectItem>
-                <SelectItem value="DRINK_CONSUMPTION">Drink Consumption</SelectItem>
-                <SelectItem value="HOURS_SLEEP">Hours Sleep</SelectItem>
-                <SelectItem value="SUGAR">Sugar</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardHeader>
-        <CardContent className="w-full p-2">
-          <ChartContainer config={chartConfig} className="h-[400px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={formatLineChartData()} margin={{ top: 10, right: 10, left: -30, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis
-                  dataKey="date"
-                  stroke="hsl(var(--foreground))"
-                  tick={{ fill: 'hsl(var(--foreground))' }}
-                />
-                <YAxis
-                  stroke="hsl(var(--foreground))"
-                  tick={{ fill: 'hsl(var(--foreground))' }}
-                />
-                <CartesianGrid strokeDasharray="3 3" />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke="hsl(var(--primary))"
-                  fillOpacity={1}
-                  fill="url(#colorValue)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+      {/* Line Chart */}
+      {isLineLoading && !isJourneyLoading ? (
+        <LineChartSkeleton />
+      ) : lineData?.data ? (
+        <LineChart data={lineData?.data} />
+      ) : (
+        <EmptyComponent />
+      )}
 
       {/* Pie Charts Grid */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {/* Sleep Quality Pie Chart */}
-        <PieChartWithLegend
-          title="Sleep Quality Distribution"
-          data={pieChartData.data.sleep_quality}
-          dataKey="Count"
-          nameKey="Sleep_Quality"
-        />
-        <PieChartWithLegend
-          title="Smoking Status Distribution"
-          data={pieChartData.data.smoking_status}
-          labelFormatter={value => (value ? 'Ya' : 'Tidak')}
-          dataKey="Count"
-          nameKey="Smoking_Status"
-        />
-        <PieChartWithLegend
-          title="Stress Level Distribution"
-          data={pieChartData.data.stress_level}
-          dataKey="Count"
-          nameKey="Stress_Level"
-        />
-        <PieChartWithLegend
-          title="Risk Profile Distribution"
-          data={pieChartData.data.risk_profile}
-          dataKey="Count"
-          nameKey="Risk_Profile"
-        />
-
-      </div>
+      {isPieLoading && !isJourneyLoading ? (
+        <PieChartsGridSkeleton />
+      ) : pieData?.data ? (
+        <PieChartsGrid data={pieData?.data} />
+      ) : (
+        <EmptyComponent />
+      )}
     </div>
   );
 }

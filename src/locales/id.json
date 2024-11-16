@@ -65,8 +65,20 @@
     "meta_description": "Buat akun dengan mudah melalui proses pendaftaran yang intuitif."
   },
   "Dashboard": {
-    "meta_title": "Dasbor",
+    "meta_title": "Dashboard",
     "hello_message": "Halo {email}!"
+  },
+  "UserJourney": {
+    "meta_title": "User Journey"
+  },
+  "Catalog": {
+    "meta_title": "Katalog Ahli"
+  },
+  "Summary": {
+    "meta_title": "Summary"
+  },
+  "Feedback": {
+    "meta_title": "Feedback"
   },
   "UserProfile": {
     "meta_title": "Profil Pengguna"
@@ -147,8 +159,8 @@
     "notifications": "Notifikasi"
   },
   "cardTitles": {
-    "consumptionHistory": "Riwayat Konsumsi",
-    "analysisInsights": "Analisis & Wawasan",
+    "consumptionHistory": "Riwayat Konsumsi Gula",
+    "analysisInsights": "Reminder",
     "dietaryGuide": "Panduan Diet"
   }
 }

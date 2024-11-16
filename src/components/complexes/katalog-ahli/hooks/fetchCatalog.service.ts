@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-interface UserCatalog {
+export interface UserCatalog {
     ID_CATALOG: number;
     ID_USER: number;
     NAME: string;

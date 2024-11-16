@@ -16,8 +16,8 @@ export type UserJourney = {
   IS_SMOKING: boolean;
   STRESS_LEVEL: string;
   RISK_PROFILE: string;
-  CREATED_AT: Date;
-  UPDATED_AT: Date;
+  CREATED_AT: string;
+  UPDATED_AT: string;
 };
 
 export const useUserJourney = (userId: number) => {

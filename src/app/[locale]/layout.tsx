@@ -62,7 +62,7 @@ export default function RootLayout(props: {
           messages={messages}
         >
           <PrimeReactProvider value={{ unstyled: false }}>
-            <NextTopLoader />
+            <NextTopLoader color='#14b8a6' />
             <QueryProvider>
               {props.children}
             </QueryProvider>

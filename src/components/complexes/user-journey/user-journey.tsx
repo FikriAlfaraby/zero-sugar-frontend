@@ -77,7 +77,7 @@ export default function UserJourney({ userId }: { userId: number }) {
         : (
             <DailyLogForm userId={userId} />
           )}
-      <JourneyCalendar userJourney={userJourneyResponse?.data} completedDays={completedDays} />
+      <JourneyCalendar userJourney={userJourneyResponse?.data ?? []} completedDays={completedDays} />
       <InsightsAndMotivation completedDays={completedDays} />
     </div>
   );

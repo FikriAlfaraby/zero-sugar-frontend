@@ -1,11 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { UserJourneyForm } from './user-journey-form';
+import { UserJourneyForm, type UserJourneyFormValues, type UserProfile } from './user-journey-form';
 
 type InitialUserJourneyProps = {
   userId: number;
@@ -15,18 +15,76 @@ type InitialUserJourneyProps = {
 export function InitialUserJourney({ userId, onJourneyComplete }: InitialUserJourneyProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
+    const { data: profileData } = useQuery<UserProfile> ({
+    queryKey: ['profile', userId],
+    queryFn: async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+      return response.json();
+    },
+  });
 
   const journeyMutation = useMutation({
-    mutationFn: async (journeyData: any) => {
+    mutationFn: async (journeyData: UserJourneyFormValues ) => {
+      const sugarResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL2}/predict_sugar_intake`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+
+      if (!sugarResponse.ok) {
+        throw new Error('Failed to fetch sugar intake prediction');
+      }
+
+      const sugar = await sugarResponse.json();
+
+      const userData = {
+        Age: Number(profileData?.AGE),
+        Gender: profileData?.GENDER === 'male' ? 1 : 0,
+        Height: profileData?.HEIGHT,
+        Weight: profileData?.WEIGHT,
+        Is_Diabetes: profileData?.IS_DIABETES ? 1 : 0,
+        BMI: profileData?.BMI,
+        Sugar: sugar.predicted_sugar_intake,
+        Drink_Consumption: Number.parseFloat(journeyData.drinkConsumption.toString()),
+        Activities: Number.parseFloat(journeyData.activities.toString()),
+        Sleep_Hours: Number.parseInt(journeyData.hoursOfSleep.toString(), 10),
+        Is_Smoking: journeyData.isSmoking ? 1 : 0,
+      };
+
+      const profileRiskResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL2}/predict_profile_risk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (!profileRiskResponse.ok) {
+        throw new Error('Failed to fetch profile risk prediction');
+      }
+
+      const dataProfileRisk = await profileRiskResponse.json();
+
+      const riskMapping = {
+        0: 'Low Risk',
+        1: 'Neutral',
+        2: 'High Risk',
+        3: 'Very High Risk',
+      };
+
+      const riskProfile = riskMapping[dataProfileRisk.predicted_cluster as keyof typeof riskMapping];
+
+      // Define convertedData with properties in the specified order
       const convertedData = {
-        sugar: Number.parseFloat(journeyData.sugarIntake),
-        drink_consumption: Number.parseFloat(journeyData.drinkConsumption),
-        activities: Number.parseFloat(journeyData.activities),
-        hours_sleep: Number.parseInt(journeyData.hoursOfSleep, 10),
-        sleep_quality: journeyData.sleepQuality?.toLowerCase(),
+        sugar: sugar.predicted_sugar_intake,
+        drink_consumption: Number.parseFloat(journeyData.drinkConsumption.toString()),
+        activities: Number.parseFloat(journeyData.activities.toString()),
+        hours_sleep: Number.parseInt(journeyData.hoursOfSleep.toString(), 10),
+        sleep_quality: journeyData.sleepQuality.toLowerCase(),
         is_smoking: journeyData.isSmoking,
-        stress_level: journeyData.stressLevel?.toLowerCase(),
-        risk_profile: journeyData.riskProfile?.toLowerCase(),
+        stress_level: journeyData.stressLevel.toLowerCase(),
+        risk_profile: riskProfile,
       };
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/journey/${userId}`, {
@@ -34,9 +92,15 @@ export function InitialUserJourney({ userId, onJourneyComplete }: InitialUserJou
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(convertedData),
       });
+
       if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.error === 'User telah mengisi journey hari ini') {
+          throw new Error('User telah mengisi journey hari ini');
+        }
         throw new Error('Failed to save user journey');
       }
+
       return response.json();
     },
     onSuccess: () => {

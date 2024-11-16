@@ -1,12 +1,12 @@
-import React from 'react';
-
-import Home from '@/components/complexes/katalog-ahli/katalog-ahli';
+import Feedback from '@/components/complexes/feedback/Feedback';
+import { currentUser } from '@clerk/nextjs/server';
 import { getTranslations } from 'next-intl/server';
+
 
 export async function generateMetadata(props: { params: { locale: string } }) {
   const t = await getTranslations({
     locale: props.params.locale,
-    namespace: 'Catalog',
+    namespace: 'Feedback',
   });
 
   return {
@@ -14,10 +14,11 @@ export async function generateMetadata(props: { params: { locale: string } }) {
   };
 }
 
-
 const page = async () => {
+  const user = await currentUser();
+
   return (
-    <Home />
+    <Feedback userId={user?.publicMetadata.id_user as number} />
   );
 };
 

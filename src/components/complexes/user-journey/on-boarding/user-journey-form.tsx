@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { UploadInput } from '@/components/ui/upload-input';
 
 const userJourneySchema = z.object({
   drinkConsumption: z.string().refine(val => !Number.isNaN(Number.parseFloat(val)), { message: 'Drink consumption must be a number.' }),
@@ -15,16 +16,40 @@ const userJourneySchema = z.object({
   sleepQuality: z.enum(['Poor', 'Average', 'Good']),
   isSmoking: z.boolean(),
   stressLevel: z.enum(['Low', 'Moderate', 'High']),
+  picture: z
+    .instanceof(FileList)
+    .refine((files) => files.length > 0, { message: 'File is required.' })
+    .refine((files) => files[0]?.type.startsWith('image/'), {
+      message: 'Only image files are allowed.',
+    }),
 });
 
-type UserJourneyFormValues = z.infer<typeof userJourneySchema>;
+export type UserJourneyFormValues = z.infer<typeof userJourneySchema>;
 
 type UserJourneyFormProps = {
   onSubmit: (data: UserJourneyFormValues) => void;
   isLoading: boolean;
 };
 
-export function UserJourneyForm({ onSubmit, isLoading }: UserJourneyFormProps) {
+export type UserProfile = {
+  ID_PROFILE: number;
+  ID_USER: number;
+  NAME: string;
+  AGE: string; // Note: Age is a string in the provided data
+  GENDER: string;
+  PHONE_NUMBER: number; // Consider using string for very large numbers
+  WEIGHT: number;
+  HEIGHT: number;
+  IS_DIABETES: boolean;
+  IS_OBESITY: boolean;
+  BMI: number;
+  IS_ONBOARDING: boolean;
+  CREATED_AT: string; // ISO format
+  UPDATED_AT: string; // ISO format
+};
+
+
+export function UserJourneyForm({ onSubmit, isLoading}: UserJourneyFormProps) {
   const form = useForm<UserJourneyFormValues>({
     resolver: zodResolver(userJourneySchema),
     defaultValues: {
@@ -39,6 +64,11 @@ export function UserJourneyForm({ onSubmit, isLoading }: UserJourneyFormProps) {
 
   return (
     <Form {...form}>
+      <FormField
+        control={form.control}
+        name="picture"
+        render={({ field }) => <UploadInput field={field} />}
+      />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}

@@ -14,17 +14,20 @@ export function JourneyCalendar({ userJourney }: JourneyCalendarProps) {
   const [, setHoveredDay] = useState<number | null>(null);
 
   // Map each journey entry to its respective day index
-  const journeyDataByDayIndex = userJourney?.reduce((acc, entry) => {
-    const dayIndex = Math.ceil(
-      (new Date(entry.CREATED_AT).getTime() - new Date(userJourney[0].CREATED_AT).getTime())
-      / (1000 * 60 * 60 * 24),
-    ) + 1; // Calculate the day difference since start
-    acc[dayIndex] = entry;
-    return acc;
-  }, {} as Record<number, UserJourney>);
+  const journeyDataByDayIndex = userJourney?.[0] ? userJourney.reduce((acc, entry) => {
+  const firstCreated = new Date(userJourney[0]?.CREATED_AT ?? '2024-10-12').getTime()
+  const dayIndex = Math.ceil(
+    (new Date(entry.CREATED_AT).getTime() - firstCreated)
+    / (1000 * 60 * 60 * 24),
+  ) + 1; // Calculate the day difference since start
+  acc[dayIndex] = entry;
+  return acc;
+}, {} as Record<number, UserJourney>) : {};
+
+
 
   const getDayColor = (day: number) => {
-    return journeyDataByDayIndex[day] ? 'bg-green-500' : 'bg-red-100'; // Completed vs Incomplete
+    return journeyDataByDayIndex[day] ? 'bg-primary text-white' : 'bg-red-100'; // Completed vs Incomplete
   };
 
   return (

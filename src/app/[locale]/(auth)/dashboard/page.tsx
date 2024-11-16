@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { currentUser } from '@clerk/nextjs/server';
 
 import { DashboardAnalytic } from '@/components/complexes/dashboard/dashboard';
 
@@ -13,10 +14,12 @@ export async function generateMetadata(props: { params: { locale: string } }) {
   };
 }
 
-const Dashboard = () => {
+const Dashboard = async () => {
+    const user = await currentUser();
+
   return (
     <div className="[&_p]:my-6">
-      <DashboardAnalytic />
+      <DashboardAnalytic username={user?.firstName ?? 'User'} userId={user?.publicMetadata.id_user as number} />
     </div>
   );
 };
