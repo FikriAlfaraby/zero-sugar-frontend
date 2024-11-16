@@ -16,7 +16,7 @@ export default function UserJourney({ userId }: { userId: number }) {
 
   const [completedDays, setCompletedDays] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
-  const [_, setHasFilledToday] = useState<boolean>(false);
+  const [hasFilledToday, setHasFilledToday] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isJourneyLoading && userJourneyResponse && userJourneyResponse.data.length) {
@@ -64,7 +64,7 @@ export default function UserJourney({ userId }: { userId: number }) {
     <div className="container mx-auto space-y-8 p-4">
       <h1 className="mb-8 text-center text-3xl font-bold">Your Wellness Journey</h1>
       <OverviewDashboard completedDays={completedDays} streak={streak} />
-      {false
+      {hasFilledToday
         ? (
             <Alert>
               <CheckCircle className="size-4" />
