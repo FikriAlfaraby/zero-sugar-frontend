@@ -39,6 +39,7 @@ export function DetailModal({ data, onClose }: DetailModalProps) {
         </div>
         <div className="mt-6 flex justify-end gap-4">
           <Button
+            className="bg-green-600 hover:bg-green-700 text-gray-50 hover:text-gray-100"
             variant="outline"
             asChild
           >
