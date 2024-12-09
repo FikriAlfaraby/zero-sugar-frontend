@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Star, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 
 export default function Home() {
@@ -52,12 +53,19 @@ export default function Home() {
                   ))}
                 </div>
               </CardContent>
+              
               <CardFooter className="flex justify-between">
                 <Button onClick={() => setSelectedExpert(expert)}>Detail</Button>
                 <Button variant="outline" asChild>
-                  <Link href={`https://wa.me/${expert.WHATSAPP}?text=${encodeURIComponent(`Halo ${expert.TITLE} ${expert.NAME}, saya melihat profil Anda di Katalog Ahli dan ingin berdiskusi lebih lanjut mengenai ${expert.SPECIALIZATION}. Apakah Anda tersedia?`)}`}>
-                  <MessageCircle className="mr-2 size-4" />
-                  WhatsApp
+                  <Link className="flex items-center justify-between space-x-0.5" href={`https://wa.me/${expert.WHATSAPP}?text=${encodeURIComponent(`Halo ${expert.TITLE} ${expert.NAME}, saya melihat profil Anda di Katalog Ahli dan ingin berdiskusi lebih lanjut mengenai ${expert.SPECIALIZATION}. Apakah Anda tersedia?`)}`}>
+                  <Image
+                    src="/assets/images/icon-wa.png"
+                    alt="Journey completed"
+                    width={35}
+                    height={35}
+                    className=""
+                  />
+                  <p>WhatsApp</p>
                   </Link>
                 </Button>
               </CardFooter>
