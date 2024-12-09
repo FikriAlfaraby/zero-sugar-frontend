@@ -31,7 +31,7 @@ export function InitialUserJourney({ userId, onJourneyComplete }: InitialUserJou
       const sugarResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL2}/predict_sugar_intake`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({profile : journeyData.picture}),
       });
 
       if (!sugarResponse.ok) {

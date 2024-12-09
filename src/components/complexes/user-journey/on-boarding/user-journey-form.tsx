@@ -75,7 +75,7 @@ export function UserJourneyForm({ onSubmit, isLoading}: UserJourneyFormProps) {
           name="drinkConsumption"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Drink Consumption (ml)</FormLabel>
+              <FormLabel>Drink Consumption (quantity)</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter daily drink intake in milliliters" />
               </FormControl>

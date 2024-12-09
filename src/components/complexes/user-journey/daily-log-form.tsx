@@ -78,7 +78,7 @@ export function DailyLogForm({ userId }: { userId: number }) {
       const sugarResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL2}/predict_sugar_intake`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({profile : journeyData.picture}),
       });
 
       if (!sugarResponse.ok) {
@@ -120,9 +120,8 @@ export function DailyLogForm({ userId }: { userId: number }) {
         3: 'Very High Risk',
       };
 
-const riskProfile = riskMapping[dataProfileRisk.predicted_cluster as keyof typeof riskMapping];
+      const riskProfile = riskMapping[dataProfileRisk.predicted_cluster as keyof typeof riskMapping];
 
-      // Define convertedData with properties in the specified order
       const convertedData = {
         sugar: sugar.predicted_sugar_intake,
         drink_consumption: Number.parseFloat(journeyData.drinkConsumption.toString()),
@@ -191,7 +190,7 @@ const riskProfile = riskMapping[dataProfileRisk.predicted_cluster as keyof typeo
           name="drinkConsumption"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Drink Consumption (L)</FormLabel>
+              <FormLabel>Drink Consumption (quantity)</FormLabel>
               <FormControl>
                 <Input type="number" {...field} onChange={e => field.onChange(Number.parseFloat(e.target.value))} />
               </FormControl>
