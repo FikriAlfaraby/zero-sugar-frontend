@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 import { DailyLogForm } from './daily-log-form';
-import { InsightsAndMotivation } from './insights-and-motivation';
 import { JourneyCalendar } from './journey-calendar';
 import { OverviewDashboard } from './overview-dashboard';
 import { useUserJourney } from './service/fetchUserJourney.service';
@@ -78,7 +77,6 @@ export default function UserJourney({ userId }: { userId: number }) {
             <DailyLogForm userId={userId} />
           )}
       <JourneyCalendar userJourney={userJourneyResponse?.data ?? []} completedDays={completedDays} />
-      <InsightsAndMotivation completedDays={completedDays} />
     </div>
   );
 }

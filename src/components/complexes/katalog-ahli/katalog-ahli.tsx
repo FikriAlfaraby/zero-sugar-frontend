@@ -6,7 +6,7 @@ import { useGetCatalog, type UserCatalog } from "@/components/complexes/katalog-
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { Star, MessageCircle } from "lucide-react";
+import { Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
